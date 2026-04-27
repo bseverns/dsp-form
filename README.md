@@ -16,13 +16,14 @@ mesh export + repair
 OBJ / STL / preview / manifest
 ```
 
-The repo starts with three practical geometry grammars:
+The repo starts with three practical direct-mesh grammars and one grammar-score lane:
 
 1. **Spectrogram terrain** — time × frequency becomes a printable relief tile.
 2. **Waveform ribbon** — amplitude/envelope becomes a swept 3D ribbon.
 3. **Circular vessel** — time wraps around a circle; features become radius, height, ridges, or texture.
+4. **StructureSynth grammar body** — a captured WAV becomes an EisenScript grammar score for recursive growth.
 
-A fourth path, **implicit field**, is included as a future direction for marching-cubes / scalar-field forms.
+A fifth path, **implicit field**, is included as a future direction for marching-cubes / scalar-field forms.
 
 ## Why this repo exists
 
@@ -73,11 +74,29 @@ Generate a vessel:
 dspform vessel audio/samples/sine_sweep.wav --out outputs/obj/sine_sweep_vessel.obj
 ```
 
-Each command writes:
+Generate a StructureSynth / EisenScript grammar score:
+
+```bash
+dspform ssynth audio/samples/sine_sweep.wav \
+  --out pipelines/structuresynth/grammars/generated/sine_sweep_onset_lattice.es \
+  --csv data/features/sine_sweep_features.csv \
+  --seed 42 \
+  --max-events 24
+```
+
+The mesh commands write:
 
 - `.obj` mesh file
 - `.json` manifest
 - optional `.csv` feature dump
+
+The `ssynth` command writes:
+
+- `.es` EisenScript grammar
+- `.json` manifest
+- optional `.csv` feature dump
+
+Open the `.es` file in StructureSynth or BrowserSynth, export OBJ, then inspect the OBJ through the same Blender/MeshLab/slicer path as the Python-generated meshes.
 
 ## Practical first milestone
 
@@ -98,6 +117,7 @@ src/dspform/mesh/        mesh export / inspection / repair helpers
 docs/                    concept, workflow, equipment, references
 sketches/processing/     Processing examples and live-teaching sketches
 blender/scripts/         Blender preview/render helpers
+pipelines/structuresynth/ StructureSynth / EisenScript grammar-score lane
 examples/                small project recipes
 audio/                   local samples and generated audio
 data/                    features, fields, manifests
@@ -109,6 +129,7 @@ outputs/                 generated meshes and previews
 - Use **SeedBox** or other seeded DSP instruments to render repeatable WAVs.
 - Use **MOARkNOBS-42** as a controller for parameters such as height, smoothing, twist, decimation, ridge depth, and seed selection.
 - Use frZone-style band triggers to place mesh events such as ribs, spikes, cuts, openings, or root structures.
+- Use StructureSynth when the sound should become a recursive grammar/body rather than a direct waveform surface.
 - Use Blender and MeshLab for visual inspection before sending anything to a printer.
 
 ## License

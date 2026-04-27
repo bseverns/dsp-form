@@ -1,0 +1,12 @@
+{
+  "name": "onset_lattice_default",
+  "template": "onset-lattice",
+  "description": "Conservative starter preset for turning onset peaks into StructureSynth grammar calls.",
+  "max_events": 24,
+  "onset_threshold": 0.62,
+  "notes": [
+    "Raise onset_threshold for sparse structures.",
+    "Lower max_events before printing if exports are too dense.",
+    "Hand-edit generated .es files after export; the grammar is a score, not a locked artifact."
+  ]
+}

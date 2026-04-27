@@ -52,3 +52,29 @@ The early object should answer:
 1. **Can it be opened?** OBJ imports cleanly in Blender or MeshLab.
 2. **Can it be understood?** A human can explain which feature shaped which dimension.
 3. **Can it be repeated?** Same source + seed + parameters generate the same result.
+
+
+## StructureSynth grammar loop
+
+```text
+1. Capture or choose a WAV.
+2. Run `dspform ssynth` to generate an EisenScript grammar.
+3. Open the `.es` file in StructureSynth or BrowserSynth.
+4. Build/render the recursive structure.
+5. Export OBJ.
+6. Save the raw OBJ beside the generated grammar and manifest.
+7. Inspect in Blender/MeshLab.
+8. Repair or simplify only after preserving the raw export.
+```
+
+First pass:
+
+```bash
+dspform ssynth audio/samples/sine_sweep.wav \
+  --out pipelines/structuresynth/grammars/generated/sine_sweep_onset_lattice.es \
+  --csv data/features/sine_sweep_features.csv \
+  --seed 42 \
+  --max-events 24
+```
+
+This lane is strongest when the sound should behave like a growth instruction set: branch here, thicken there, fork when struck, shimmer when bright.

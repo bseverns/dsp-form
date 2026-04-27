@@ -78,3 +78,25 @@ Best for:
 Risk:
 
 - Meshes can become heavy quickly. Start with low resolutions and strict manifests.
+
+
+## 5. StructureSynth grammar body
+
+```text
+audio features → EisenScript grammar
+RMS → scale / trunk mass
+onset peaks → event calls
+centroid → low/mid/high rule family and rotation bias
+bandwidth → twist / spread / roughness
+```
+
+Best for:
+
+- Recursive scaffolds.
+- Sound-grown architectures.
+- Coral, root, antenna, ruin, lattice, and swarm forms.
+- Situations where the audio should become a behavior system rather than a literal mesh.
+
+Risk:
+
+- StructureSynth exports can become dense quickly. Preserve the `.es` source, export OBJ conservatively, and inspect before printing.

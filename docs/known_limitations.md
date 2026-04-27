@@ -10,7 +10,16 @@ This starter repo is intentionally modest.
 - Blender rendering is provided as a script, not as a fully polished preview system.
 - Processing sketch is a teaching stub, not a full audio input system.
 - Control trace input is documented but not yet implemented.
+- StructureSynth grammar generation is implemented as a starter score writer, not as an automated StructureSynth renderer/exporter.
 
 ## Design choice
 
 The repo starts with plain, inspectable code instead of a clever abstraction layer. That is intentional. The first goal is to make the pipeline understandable enough to teach, debug, and extend.
+
+
+## StructureSynth-specific limits
+
+- The repo can generate `.es` grammar files, but the actual StructureSynth/BrowserSynth OBJ export remains a manual step.
+- Generated EisenScript should be treated as editable studio material.
+- Grammar-heavy exports may contain many primitives and can be slow or fragile in Blender/slicers.
+- Printability depends on export settings, primitive size, mesh cleanup, and final scale.

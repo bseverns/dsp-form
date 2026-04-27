@@ -11,6 +11,7 @@ from .generators.implicit_field import write_implicit_field
 from .generators.ribbon import write_ribbon
 from .generators.terrain import write_terrain
 from .generators.vessel import write_vessel
+from .structuresynth import write_structuresynth_grammar
 
 
 def generate_sample(out: str | Path, *, seconds: float = 4.0, sr: int = 22050) -> Path:
@@ -74,6 +75,17 @@ def main() -> None:
     p_field.add_argument("--level", type=float, default=0.35)
     p_field.add_argument("--scale", type=float, default=80.0)
 
+    p_ssynth = sub.add_parser("ssynth", help="Generate a StructureSynth/EisenScript grammar score from audio")
+    p_ssynth.add_argument("audio", help="Input audio path")
+    p_ssynth.add_argument("--out", required=True, help="Output .es / EisenScript path")
+    p_ssynth.add_argument("--seed", type=int, default=0, help="Deterministic seed written into the grammar and manifest")
+    p_ssynth.add_argument("--sr", type=int, default=22050, help="Analysis sample rate")
+    p_ssynth.add_argument("--hop", type=int, default=512, help="Analysis hop length")
+    p_ssynth.add_argument("--csv", default=None, help="Optional feature CSV output path")
+    p_ssynth.add_argument("--template", default="onset-lattice", choices=["onset-lattice"], help="Grammar template")
+    p_ssynth.add_argument("--max-events", type=int, default=24, help="Maximum onset/event calls written into the grammar")
+    p_ssynth.add_argument("--onset-threshold", type=float, default=0.62, help="Normalized onset threshold for event extraction")
+
     args = parser.parse_args()
 
     if args.command == "sample":
@@ -129,10 +141,22 @@ def main() -> None:
             scale_mm=args.scale,
             seed=args.seed,
         )
+    elif args.command == "ssynth":
+        manifest = write_structuresynth_grammar(
+            features,
+            args.out,
+            seed=args.seed,
+            template=args.template,
+            max_events=args.max_events,
+            onset_threshold=args.onset_threshold,
+        )
     else:
         raise ValueError(f"Unknown command: {args.command}")
 
-    print(f"wrote {manifest['outputs']['obj']}")
+    if "obj" in manifest["outputs"]:
+        print(f"wrote {manifest['outputs']['obj']}")
+    if "eisenscript" in manifest["outputs"]:
+        print(f"wrote {manifest['outputs']['eisenscript']}")
     print(f"wrote {manifest['outputs']['manifest']}")
     warnings = manifest.get("mesh", {}).get("warnings", [])
     if warnings:

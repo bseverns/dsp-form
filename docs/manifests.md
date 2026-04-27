@@ -38,3 +38,20 @@ Add these later:
 - Print result notes.
 - Photo/render paths.
 - License/attribution details for source audio.
+
+
+## StructureSynth manifests
+
+The `ssynth` command writes a manifest beside the generated `.es` file. It records:
+
+- source audio path
+- analysis settings
+- StructureSynth template
+- seed
+- onset threshold
+- max event count
+- summary feature statistics
+- generated grammar parameters
+- expected next step: open in StructureSynth/BrowserSynth and export OBJ
+
+For this lane, the manifest documents the grammar score. The exported OBJ should either receive its own later manifest or be named so the connection remains obvious.

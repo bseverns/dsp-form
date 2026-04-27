@@ -32,3 +32,20 @@ time_seconds,cc01,cc02,cc03,cc04,button01,envelope01
 ```
 
 A future parser can resample this trace to match audio frames or use it directly as the geometry timeline.
+
+
+## StructureSynth controls
+
+The same control traces can generate EisenScript grammar variations.
+
+| Control | EisenScript / grammar target | Result |
+|---|---|---|
+| cc01 | `set maxdepth` or trunk recursion depth | longer/shorter growth |
+| cc02 | `set maxobjects` / event count | sparse/dense structures |
+| cc03 | `rz` / twist values | spiral or torsional behavior |
+| cc04 | branch decay / `s` values | compact vs spreading bodies |
+| cc05 | event family mix | low/mid/high growth emphasis |
+| button01 | grammar snapshot | freeze/export a score |
+| envelope01 | event scale | swelling nodes or ribs |
+
+A useful future performance mode: record MOARkNOBS/MIDI/OSC values as a CSV, then generate several `.es` grammars from marked moments in the take.

@@ -53,3 +53,14 @@ Use Processing when the point is live drawing, fast teaching, or a direct “dra
 - TouchDesigner MIDI In CHOP: https://docs.derivative.ca/MIDI_In_CHOP
 
 Use TouchDesigner later for live audio/MIDI/control pipelines and installation contexts.
+
+## StructureSynth / EisenScript grammar lane
+
+- StructureSynth home: https://structuresynth.sourceforge.net/
+- StructureSynth EisenScript reference: https://structuresynth.sourceforge.net/reference.php
+- Ubuntu manpage / command reference mirror: https://manpages.ubuntu.com/manpages/focal/man1/structure-synth.1.html
+- BrowserSynth GitHub: https://github.com/kronpano/BrowserSynth
+- BrowserSynth live app: https://kronpano.github.io/BrowserSynth/
+- PyMeshLab Structure Synth mesh creation filter: https://pymeshlab.readthedocs.io/en/latest/filter_list.html
+
+Use these for recursive grammar bodies, EisenScript syntax, OBJ export notes, and possible browser-based StructureSynth experiments.

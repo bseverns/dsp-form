@@ -37,3 +37,16 @@ Status: core commitment.
 TouchDesigner, OSC, MIDI, Jetson, and installation workflows will be stronger after the Python batch pipeline proves the grammar.
 
 Status: practical starting constraint.
+
+
+## A7 — StructureSynth grammars are scores
+
+A generated `.es` file is treated as a score for recursive structure, not as a finished mesh. The OBJ exported from StructureSynth or BrowserSynth is one performance of that score.
+
+Status: useful framing assumption.
+
+## A8 — Audio can control rules without becoming literal geometry
+
+A captured WAV does not need to become a waveform surface. It can become recursion depth, event density, branching behavior, scale decay, and rule-family selection.
+
+Status: central StructureSynth lane assumption.

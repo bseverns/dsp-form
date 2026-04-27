@@ -35,6 +35,16 @@
 - [ ] Record performance trace.
 - [ ] Generate mesh family from trace.
 
+## Phase 4.5 — StructureSynth grammar bodies
+
+- [ ] Generate first `.es` grammar from WAV using `dspform ssynth`.
+- [ ] Open grammar in StructureSynth or BrowserSynth.
+- [ ] Export OBJ.
+- [ ] Save raw export beside grammar and manifest.
+- [ ] Inspect in Blender/MeshLab.
+- [ ] Compare three settings: seed, max events, onset threshold.
+- [ ] Decide which objects are print candidates and which are render-only.
+
 ## Phase 5 — print lab
 
 - [ ] Mesh repair presets.

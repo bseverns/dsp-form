@@ -9,9 +9,9 @@ set maxdepth {{ maxdepth }}
 set maxobjects {{ maxobjects }}
 set background white
 
-main
+start
 
-rule main {
+rule start {
   { s {{ trunk_scale }} } trunk
   {{ event_calls }}
 }
@@ -33,20 +33,20 @@ rule twig maxdepth {{ twig_depth }} {
   { x {{ twig_step }} rz {{ twig_angle }} ry {{ twig_lift }} s {{ twig_decay }} } twig
 }
 
-rule event_low maxdepth 6 {
+rule eventLow maxdepth 6 {
   { s {{ low_scale }} } sphere
-  { x {{ low_step }} rz {{ low_twist }} ry {{ low_lift }} s 0.82 } event_low
+  { x {{ low_step }} rz {{ low_twist }} ry {{ low_lift }} s 0.82 } eventLow
 }
 
-rule event_mid maxdepth 7 {
+rule eventMid maxdepth 7 {
   { s {{ mid_scale }} } box
-  { x {{ mid_step }} rz {{ mid_twist }} ry {{ mid_lift }} s 0.80 } event_mid
+  { x {{ mid_step }} rz {{ mid_twist }} ry {{ mid_lift }} s 0.80 } eventMid
   { x 0.54 rz {{ mid_branch_angle }} s 0.70 } twig
 }
 
-rule event_high maxdepth 5 {
+rule eventHigh maxdepth 5 {
   { s {{ high_scale }} } sphere
-  { x {{ high_step }} rz {{ high_twist }} ry {{ high_lift }} s 0.72 } event_high
+  { x {{ high_step }} rz {{ high_twist }} ry {{ high_lift }} s 0.72 } eventHigh
   { x 0.35 rz {{ high_sparkle_angle }} s 0.54 } sparkle
 }
 

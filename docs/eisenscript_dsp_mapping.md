@@ -7,7 +7,7 @@ This is the working translation table:
 | DSP concept | Feature source | EisenScript target | Sculptural effect |
 |---|---|---|---|
 | loudness / body | RMS | `s`, trunk scale, branch step | larger, heavier growth |
-| attacks / impacts | onset envelope | event calls in `rule main` | ribs, forks, nodes, scars |
+| attacks / impacts | onset envelope | event calls in `rule start` | ribs, forks, nodes, scars |
 | brightness | spectral centroid | `ry`, event family | upwardness, fine detail, angular bias |
 | roughness / spread | spectral bandwidth | `rz`, branch decay, twist | tangledness, turbulence |
 | repeatability | seed | `set seed` | reproducible variants |
@@ -33,9 +33,9 @@ This produces coherent, stable objects.
 Important moments in the WAV become individual grammar calls.
 
 ```text
-onset at 0.21 s → { x -10.2 rz -20 s 0.74 } event_low
-onset at 1.03 s → { x -2.7  rz 12  s 1.10 } event_mid
-onset at 2.44 s → { x 8.3   rz 47  s 0.46 } event_high
+onset at 0.21 s → { x -10.2 rz -20 s 0.74 } eventLow
+onset at 1.03 s → { x -2.7  rz 12  s 1.10 } eventMid
+onset at 2.44 s → { x 8.3   rz 47  s 0.46 } eventHigh
 ```
 
 This produces objects that feel more like fossilized performances.
@@ -45,9 +45,9 @@ This produces objects that feel more like fossilized performances.
 Use three broad event families first:
 
 ```text
-event_low   = bass/body/root behavior
-event_mid   = branch/fork/scaffold behavior
-event_high  = sparkle/detail/surface behavior
+eventLow   = bass/body/root behavior
+eventMid   = branch/fork/scaffold behavior
+eventHigh  = sparkle/detail/surface behavior
 ```
 
 This keeps the mapping legible while leaving room for hand editing.

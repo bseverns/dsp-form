@@ -64,3 +64,5 @@ Use TouchDesigner later for live audio/MIDI/control pipelines and installation c
 - PyMeshLab Structure Synth mesh creation filter: https://pymeshlab.readthedocs.io/en/latest/filter_list.html
 
 Use these for recursive grammar bodies, EisenScript syntax, OBJ export notes, and possible browser-based StructureSynth experiments.
+
+- `docs/structuresynth_sanity_check.md` records the conservative EisenScript subset used by the generator.

@@ -53,7 +53,7 @@ It maps sound into StructureSynth like this:
 | spectral centroid | low/mid/high event families, rotation bias |
 | spectral bandwidth | twist, roughness, branching spread |
 | seed | StructureSynth `set seed` value |
-| max events | number of event calls written into `rule main` |
+| max events | number of event calls written into `rule start` |
 
 ## Recommended manual workflow
 
@@ -87,7 +87,7 @@ The generated grammar is meant to be editable. After generation, try hand-changi
 - `set maxdepth`
 - `set maxobjects`
 - the first `{ s ... } trunk` call
-- event rule names in `rule main`
+- event rule names in `rule start`
 - `rz`, `ry`, and `s` values inside event calls
 - rule weights, once you begin writing ambiguous rules by hand
 

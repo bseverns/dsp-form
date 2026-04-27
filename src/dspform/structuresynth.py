@@ -118,9 +118,9 @@ def generate_eisenscript(
             f"set maxdepth {maxdepth}",
             f"set maxobjects {maxobjects}",
             "set background white",
-            "main",
+            "start",
             "",
-            "rule main {",
+            "rule start {",
             f"  {{ s {_safe_float(trunk_scale)} }} trunk",
         ]
     )
@@ -143,14 +143,16 @@ def generate_eisenscript(
         ry = -18.0 + 36.0 * c
 
         if c < 0.34:
-            rule_name = "event_low"
+            rule_name = "eventLow"
         elif c < 0.68:
-            rule_name = "event_mid"
+            rule_name = "eventMid"
         else:
-            rule_name = "event_high"
+            rule_name = "eventHigh"
 
         # Add one line per captured event. These lines are the clearest place to
-        # hand-edit the sonic structure after generation.
+        # hand-edit the sonic structure after generation. Rule names are
+        # intentionally letter-only/camelCase for compatibility with older
+        # StructureSynth/EisenScript parsers and browser ports.
         lines.append(
             "  "
             + f"{{ x {_safe_float(x)} y {_safe_float(y)} z {_safe_float(z)} "
@@ -179,20 +181,20 @@ def generate_eisenscript(
             f"  {{ x {_safe_float(0.38 + 0.22 * brightness)} rz {_safe_float(twist * 0.35)} ry {_safe_float(branch_angle * 0.45)} s {_safe_float(0.72 + 0.12 * energy)} }} twig",
             "}",
             "",
-            "rule event_low maxdepth 6 {",
+            "rule eventLow maxdepth 6 {",
             f"  {{ s {_safe_float(0.74 + energy)} }} sphere",
-            f"  {{ x {_safe_float(0.78 + energy)} rz {_safe_float(-18 - twist * 0.18)} ry {_safe_float(8 + branch_angle * 0.2)} s {_safe_float(0.82)} }} event_low",
+            f"  {{ x {_safe_float(0.78 + energy)} rz {_safe_float(-18 - twist * 0.18)} ry {_safe_float(8 + branch_angle * 0.2)} s {_safe_float(0.82)} }} eventLow",
             "}",
             "",
-            "rule event_mid maxdepth 7 {",
+            "rule eventMid maxdepth 7 {",
             f"  {{ s {_safe_float(0.45 + roughness)} }} box",
-            f"  {{ x {_safe_float(0.68 + roughness)} rz {_safe_float(branch_angle)} ry {_safe_float(12 + brightness * 25)} s {_safe_float(0.8)} }} event_mid",
+            f"  {{ x {_safe_float(0.68 + roughness)} rz {_safe_float(branch_angle)} ry {_safe_float(12 + brightness * 25)} s {_safe_float(0.8)} }} eventMid",
             f"  {{ x {_safe_float(0.54)} rz {_safe_float(-branch_angle * 0.85)} s {_safe_float(0.62 + 0.18 * energy)} }} twig",
             "}",
             "",
-            "rule event_high maxdepth 5 {",
+            "rule eventHigh maxdepth 5 {",
             f"  {{ s {_safe_float(0.22 + brightness * 0.42)} }} sphere",
-            f"  {{ x {_safe_float(0.46 + brightness * 0.34)} rz {_safe_float(34 + twist * 0.45)} ry {_safe_float(18 + branch_angle * 0.35)} s {_safe_float(0.72)} }} event_high",
+            f"  {{ x {_safe_float(0.46 + brightness * 0.34)} rz {_safe_float(34 + twist * 0.45)} ry {_safe_float(18 + branch_angle * 0.35)} s {_safe_float(0.72)} }} eventHigh",
             f"  {{ x {_safe_float(0.35)} rz {_safe_float(-52 - twist * 0.2)} s {_safe_float(0.48 + 0.22 * roughness)} }} sparkle",
             "}",
             "",

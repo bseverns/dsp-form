@@ -1,0 +1,21 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+
+# Generated artifacts
+outputs/**/*.obj
+outputs/**/*.stl
+outputs/**/*.3mf
+outputs/**/*.png
+outputs/**/*.json
+data/features/*.csv
+data/fields/*.npy
+data/manifests/*.json
+audio/generated/*.wav
+
+# Keep folders visible
+!outputs/**/.gitkeep
+!audio/generated/.gitkeep
+!data/**/.gitkeep

@@ -9,7 +9,7 @@ import numpy as np
 from ..audio_features import AudioFeatures
 from ..mesh.export import export_obj
 from ..mesh.inspect import inspect_arrays
-from ..utils import normalize, utc_now_iso, write_json
+from ..utils import normalize, runtime_provenance, utc_now_iso, write_json
 
 
 @dataclass
@@ -76,8 +76,10 @@ def write_implicit_field(
         "generator": "implicit_field",
         "seed": seed,
         "parameters": {"resolution": resolution, "level": level, "scale_mm": scale_mm},
+        "seed_usage": "metadata_only",
         "audio": features.to_manifest(),
         "mesh": report.to_dict(),
+        "provenance": runtime_provenance(),
         "outputs": {"obj": str(obj_path)},
     }
     manifest_path = Path(out_path).with_suffix(".manifest.json")

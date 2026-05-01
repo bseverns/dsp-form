@@ -9,7 +9,9 @@ dspform vessel audio/samples/sine_sweep.wav \
   --base-radius 20 \
   --radial-amp 12 \
   --layers 48 \
-  --ridge-amp 3
+  --ridge-amp 3 \
+  --angle-jitter-deg 0.0 \
+  --radius-noise-mm 0.0
 ```
 
 Reflection:

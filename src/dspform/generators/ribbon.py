@@ -8,7 +8,7 @@ import numpy as np
 from ..audio_features import AudioFeatures
 from ..mesh.export import export_obj
 from ..mesh.inspect import inspect_arrays
-from ..utils import normalize, stable_seed, utc_now_iso, write_json
+from ..utils import normalize, runtime_provenance, stable_seed, utc_now_iso, write_json
 
 
 def ribbon_mesh(
@@ -20,6 +20,7 @@ def ribbon_mesh(
     height_mm: float = 32.0,
     lateral_mm: float = 24.0,
     twist: float = 0.0,
+    wobble_mm: float = 0.0,
     seed: int | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Create a rectangular swept ribbon following audio features.
@@ -38,7 +39,7 @@ def ribbon_mesh(
 
     centers = []
     for i, x in enumerate(xs):
-        wobble = (rng.random() - 0.5) * 0.25
+        wobble = (rng.random() - 0.5) * wobble_mm
         y = (rms[i] - 0.5) * lateral_mm + wobble
         z = centroid[i] * height_mm + 1.0
         centers.append((x, y, z))
@@ -90,6 +91,7 @@ def write_ribbon(
     height_mm: float = 32.0,
     lateral_mm: float = 24.0,
     twist: float = 0.0,
+    wobble_mm: float = 0.0,
     seed: int | None = None,
 ) -> dict[str, Any]:
     vertices, faces = ribbon_mesh(
@@ -100,6 +102,7 @@ def write_ribbon(
         height_mm=height_mm,
         lateral_mm=lateral_mm,
         twist=twist,
+        wobble_mm=wobble_mm,
         seed=seed,
     )
     obj_path = export_obj(vertices, faces, out_path)
@@ -115,9 +118,12 @@ def write_ribbon(
             "height_mm": height_mm,
             "lateral_mm": lateral_mm,
             "twist": twist,
+            "wobble_mm": wobble_mm,
         },
+        "seed_usage": "geometry_rng" if wobble_mm > 0 else "metadata_only",
         "audio": features.to_manifest(),
         "mesh": report.to_dict(),
+        "provenance": runtime_provenance(),
         "outputs": {"obj": str(obj_path)},
     }
     manifest_path = Path(out_path).with_suffix(".manifest.json")

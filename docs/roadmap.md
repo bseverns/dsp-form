@@ -21,11 +21,11 @@
 
 ## Phase 3 — seeded families
 
-- [ ] Batch generator.
-- [ ] Contact-sheet preview.
-- [ ] Seed sweep.
-- [ ] Parameter sweep.
-- [ ] Comparison CSV.
+- [x] Batch generator.
+- [x] Contact-sheet preview.
+- [x] Seed sweep.
+- [x] Parameter sweep.
+- [x] Comparison CSV.
 
 ## Phase 4 — controller-driven forms
 

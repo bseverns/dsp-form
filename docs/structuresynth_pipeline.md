@@ -25,6 +25,7 @@ The goal is not a waveform object. The goal is a rule system whose growth behavi
 ```bash
 dspform ssynth audio/samples/sine_sweep.wav \
   --out pipelines/structuresynth/grammars/generated/sine_sweep_onset_lattice.es \
+  --template onset-lattice \
   --csv data/features/sine_sweep_features.csv \
   --seed 42 \
   --max-events 24
@@ -42,7 +43,10 @@ The `.es` file is the StructureSynth grammar. The `.json` file is the receipt.
 
 ## What the current template does
 
-The starter template is called `onset-lattice`.
+The starter templates are:
+
+- `onset-lattice`
+- `radial-burst`
 
 It maps sound into StructureSynth like this:
 

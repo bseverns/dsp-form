@@ -11,7 +11,8 @@ dspform terrain audio/samples/sine_sweep.wav \
   --width 90 \
   --depth 60 \
   --height 14 \
-  --base 2
+  --base 2 \
+  --texture-noise-mm 0.0
 ```
 
 Open the OBJ in Blender or MeshLab. Then try a slicer.

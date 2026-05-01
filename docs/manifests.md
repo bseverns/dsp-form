@@ -9,9 +9,11 @@ Minimum fields:
   "created_utc": "2026-04-26T00:00:00+00:00",
   "generator": "terrain",
   "seed": 42,
+  "seed_usage": "metadata_only",
   "parameters": {},
   "audio": {},
   "mesh": {},
+  "provenance": {},
   "outputs": {}
 }
 ```
@@ -30,14 +32,31 @@ They make the object:
 
 Add these later:
 
-- Git commit hash.
 - Host machine name.
-- Python package versions.
 - Printer/slicer profile.
 - Material used.
 - Print result notes.
 - Photo/render paths.
 - License/attribution details for source audio.
+
+Current manifests now include lightweight provenance:
+
+- `provenance.git_commit` when available
+- `provenance.python_version`
+- `provenance.package_versions` for core dependencies
+
+Seed behavior is now explicit per export:
+
+- `seed_usage: metadata_only` means seed is recorded but does not affect geometry/grammar.
+- `seed_usage: geometry_rng` means seed changes mesh geometry.
+- `seed_usage: grammar_rng` means seed changes grammar generation.
+
+Sweep commands now also write aggregate receipts:
+
+- `*_seed_sweep.json` for seed families
+- `*_param_sweep.json` for parameter sweeps
+- `*_comparison.csv` for parameter-by-parameter comparison
+- `contact-sheet` PNGs can be generated from either sweep index JSON
 
 
 ## StructureSynth manifests

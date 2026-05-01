@@ -41,6 +41,7 @@ The guiding principle is simple:
 > Every object should know how it was born.
 
 Each generated mesh should have a nearby manifest recording the source file, seed, parameters, generator version, dimensions, output paths, and warnings.
+Manifests also record seed usage mode (`geometry_rng`, `grammar_rng`, or `metadata_only`) so seed behavior is explicit per lane.
 
 ## Quick start
 
@@ -60,18 +61,24 @@ Generate a terrain tile:
 
 ```bash
 dspform terrain audio/samples/sine_sweep.wav --out outputs/obj/sine_sweep_terrain.obj
+# optional seeded texture variation:
+#   --texture-noise-mm 0.6 --seed 42
 ```
 
 Generate a ribbon:
 
 ```bash
-dspform ribbon audio/samples/sine_sweep.wav --out outputs/obj/sine_sweep_ribbon.obj
+dspform ribbon audio/samples/sine_sweep.wav \
+  --out outputs/obj/sine_sweep_ribbon.obj \
+  --wobble-mm 0.0
 ```
 
 Generate a vessel:
 
 ```bash
 dspform vessel audio/samples/sine_sweep.wav --out outputs/obj/sine_sweep_vessel.obj
+# optional seeded variation:
+#   --angle-jitter-deg 6 --radius-noise-mm 0.8 --seed 42
 ```
 
 Generate a StructureSynth / EisenScript grammar score:
@@ -80,6 +87,7 @@ Generate a StructureSynth / EisenScript grammar score:
 dspform ssynth audio/samples/sine_sweep.wav \
   --out pipelines/structuresynth/grammars/generated/sine_sweep_onset_lattice.es \
   --csv data/features/sine_sweep_features.csv \
+  --template onset-lattice \
   --seed 42 \
   --max-events 24
 ```
@@ -95,6 +103,45 @@ The `ssynth` command writes:
 - `.es` EisenScript grammar
 - `.json` manifest
 - optional `.csv` feature dump
+
+Generate a seeded family (batch seed sweep):
+
+```bash
+dspform seed-sweep audio/samples/sine_sweep.wav \
+  --generator terrain \
+  --out-dir outputs/obj/seed_sweeps \
+  --seed-start 0 \
+  --seed-count 8 \
+  --seed-step 1 \
+  --texture-noise-mm 0.6
+```
+
+This writes one output per seed plus an index manifest:
+
+- `*_seed_sweep.json` (seed list + per-seed output/manifest paths)
+
+Generate a parameter sweep with comparison CSV:
+
+```bash
+dspform param-sweep audio/samples/sine_sweep.wav \
+  --generator vessel \
+  --param radius_noise_mm \
+  --values 0.0,0.4,0.8,1.2 \
+  --seed 42 \
+  --out-dir outputs/obj/param_sweeps
+```
+
+This writes one output per value plus:
+
+- `*_comparison.csv` (per-run manifest + mesh metrics)
+- `*_param_sweep.json` (sweep index and artifact paths)
+
+Render a contact sheet from any sweep index:
+
+```bash
+dspform contact-sheet outputs/obj/param_sweeps/sine_sweep_vessel_radius_noise_mm_param_sweep.json \
+  --out outputs/previews/sine_sweep_vessel_radius_noise_sheet.png
+```
 
 Open the `.es` file in StructureSynth or BrowserSynth, export OBJ, then inspect the OBJ through the same Blender/MeshLab/slicer path as the Python-generated meshes.
 

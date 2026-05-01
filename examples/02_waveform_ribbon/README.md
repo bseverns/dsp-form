@@ -10,10 +10,11 @@ dspform ribbon audio/samples/sine_sweep.wav \
   --thickness 1.2 \
   --height 32 \
   --lateral 24 \
-  --twist 1.5
+  --twist 1.5 \
+  --wobble-mm 0.0
 ```
 
-Try changing only `--twist`, then only `--thickness`.
+Try changing only `--twist`, then only `--thickness`, then `--wobble-mm`.
 
 Reflection:
 

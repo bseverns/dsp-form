@@ -8,6 +8,7 @@ This example uses a WAV file to generate an EisenScript grammar for StructureSyn
 dspform ssynth audio/samples/sine_sweep.wav \
   --out pipelines/structuresynth/grammars/generated/sine_sweep_onset_lattice.es \
   --csv data/features/sine_sweep_features.csv \
+  --template onset-lattice \
   --seed 42 \
   --max-events 24
 ```
@@ -40,5 +41,6 @@ Change exactly one of these and regenerate:
 - `--seed`
 - `--max-events`
 - `--onset-threshold`
+- `--template` (`onset-lattice` vs `radial-burst`)
 
 Then compare the resulting grammar and exported object.

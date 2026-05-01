@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import platform
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -37,3 +39,52 @@ def stable_seed(seed: int | None) -> int:
     if seed is None:
         return 0
     return int(seed) % (2**32 - 1)
+
+
+def _package_versions(names: list[str]) -> dict[str, str]:
+    try:
+        import importlib.metadata as importlib_metadata
+    except Exception:
+        return {}
+
+    versions: dict[str, str] = {}
+    for name in names:
+        try:
+            versions[name] = importlib_metadata.version(name)
+        except Exception:
+            continue
+    return versions
+
+
+def _git_commit_short() -> str | None:
+    try:
+        out = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            stderr=subprocess.DEVNULL,
+            text=True,
+        ).strip()
+        return out or None
+    except Exception:
+        return None
+
+
+def runtime_provenance() -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "python_version": platform.python_version(),
+        "package_versions": _package_versions(
+            [
+                "dsp-form-lab",
+                "numpy",
+                "scipy",
+                "librosa",
+                "soundfile",
+                "trimesh",
+                "scikit-image",
+                "matplotlib",
+            ]
+        ),
+    }
+    git_sha = _git_commit_short()
+    if git_sha:
+        payload["git_commit"] = git_sha
+    return payload

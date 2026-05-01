@@ -51,7 +51,7 @@ The early object should answer:
 
 1. **Can it be opened?** OBJ imports cleanly in Blender or MeshLab.
 2. **Can it be understood?** A human can explain which feature shaped which dimension.
-3. **Can it be repeated?** Same source + seed + parameters generate the same result.
+3. **Can it be repeated?** Same source + parameters generate the same result, with seed behavior defined by each lane's `seed_usage` manifest field.
 
 
 ## StructureSynth grammar loop
@@ -78,3 +78,44 @@ dspform ssynth audio/samples/sine_sweep.wav \
 ```
 
 This lane is strongest when the sound should behave like a growth instruction set: branch here, thicken there, fork when struck, shimmer when bright.
+
+## Seed sweep loop
+
+Generate a family quickly:
+
+```bash
+dspform seed-sweep audio/samples/sine_sweep.wav \
+  --generator ribbon \
+  --out-dir outputs/obj/seed_sweeps \
+  --seed-start 0 \
+  --seed-count 12 \
+  --wobble-mm 0.8
+```
+
+Then compare the resulting `*_seed_sweep.json` index and manifests before picking print candidates.
+
+## Parameter sweep loop
+
+Compare one control directly:
+
+```bash
+dspform param-sweep audio/samples/sine_sweep.wav \
+  --generator ssynth \
+  --param max_events \
+  --values 8,16,24,32 \
+  --seed 42 \
+  --out-dir outputs/param_sweeps
+```
+
+Use the generated `*_comparison.csv` to compare output paths, mesh metrics, and StructureSynth event counts across the sweep.
+
+## Contact sheet loop
+
+Turn any sweep into a visual board:
+
+```bash
+dspform contact-sheet outputs/obj/seed_sweeps/sine_sweep_ribbon_seed_sweep.json \
+  --out outputs/previews/sine_sweep_ribbon_seed_sheet.png
+```
+
+For OBJ-based sweeps this renders quick mesh thumbnails. For grammar-only sweeps it falls back to labeled metadata cards.

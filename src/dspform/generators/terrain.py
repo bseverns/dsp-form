@@ -8,7 +8,7 @@ import numpy as np
 from ..audio_features import AudioFeatures
 from ..mesh.export import export_obj
 from ..mesh.inspect import inspect_arrays
-from ..utils import normalize, utc_now_iso, write_json
+from ..utils import normalize, runtime_provenance, stable_seed, utc_now_iso, write_json
 
 
 def terrain_mesh(
@@ -18,6 +18,8 @@ def terrain_mesh(
     depth_mm: float = 60.0,
     height_mm: float = 14.0,
     base_mm: float = 2.0,
+    texture_noise_mm: float = 0.0,
+    seed: int | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Create a watertight-ish spectrogram relief tile.
 
@@ -33,9 +35,12 @@ def terrain_mesh(
 
     top_vertices = []
     bottom_vertices = []
+    rng = np.random.default_rng(stable_seed(seed))
     for yi, y in enumerate(ys):
         for xi, x in enumerate(xs):
             z = base_mm + float(grid[yi, xi]) * height_mm
+            if texture_noise_mm > 0:
+                z += (rng.random() - 0.5) * texture_noise_mm
             top_vertices.append((x, y, z))
             bottom_vertices.append((x, y, 0.0))
 
@@ -93,6 +98,7 @@ def write_terrain(
     depth_mm: float = 60.0,
     height_mm: float = 14.0,
     base_mm: float = 2.0,
+    texture_noise_mm: float = 0.0,
     seed: int | None = None,
 ) -> dict[str, Any]:
     vertices, faces = terrain_mesh(
@@ -101,6 +107,8 @@ def write_terrain(
         depth_mm=depth_mm,
         height_mm=height_mm,
         base_mm=base_mm,
+        texture_noise_mm=texture_noise_mm,
+        seed=seed,
     )
     obj_path = export_obj(vertices, faces, out_path)
     report = inspect_arrays(vertices, faces)
@@ -113,9 +121,12 @@ def write_terrain(
             "depth_mm": depth_mm,
             "height_mm": height_mm,
             "base_mm": base_mm,
+            "texture_noise_mm": texture_noise_mm,
         },
+        "seed_usage": "geometry_rng" if texture_noise_mm > 0 else "metadata_only",
         "audio": features.to_manifest(),
         "mesh": report.to_dict(),
+        "provenance": runtime_provenance(),
         "outputs": {"obj": str(obj_path)},
     }
     manifest_path = Path(out_path).with_suffix(".manifest.json")

@@ -8,7 +8,7 @@ import numpy as np
 from ..audio_features import AudioFeatures
 from ..mesh.export import export_obj
 from ..mesh.inspect import inspect_arrays
-from ..utils import normalize, utc_now_iso, write_json
+from ..utils import normalize, runtime_provenance, stable_seed, utc_now_iso, write_json
 
 
 def vessel_mesh(
@@ -19,7 +19,10 @@ def vessel_mesh(
     radial_amp_mm: float = 12.0,
     layers: int = 48,
     ridge_amp_mm: float = 3.0,
+    angle_jitter_deg: float = 0.0,
+    radius_noise_mm: float = 0.0,
     close_top: bool = False,
+    seed: int | None = None,
 ) -> tuple[np.ndarray, np.ndarray]:
     """Create a circular vessel from audio features.
 
@@ -35,6 +38,9 @@ def vessel_mesh(
     centroid = normalize(features.centroid)
     onset = normalize(features.onset)
     bandwidth = normalize(features.bandwidth)
+    rng = np.random.default_rng(stable_seed(seed))
+    angle_jitter_rad = np.deg2rad(angle_jitter_deg)
+    angle_offsets = (rng.random(frames) - 0.5) * 2.0 * angle_jitter_rad if angle_jitter_deg > 0 else np.zeros(frames)
 
     vertices = []
     for layer in range(layers):
@@ -42,14 +48,18 @@ def vessel_mesh(
         z = v * height_mm
         layer_shape = np.sin(v * np.pi)  # quiet at base and lip, louder at belly
         for i in range(frames):
-            a = (i / frames) * np.pi * 2.0
+            a = (i / frames) * np.pi * 2.0 + float(angle_offsets[i])
             ridge = np.sin(v * np.pi * 12.0 + onset[i] * np.pi) * ridge_amp_mm * onset[i]
+            radius_noise = 0.0
+            if radius_noise_mm > 0:
+                radius_noise = (rng.random() - 0.5) * 2.0 * radius_noise_mm * layer_shape
             radius = (
                 base_radius_mm
                 + radial_amp_mm * rms[i] * layer_shape
                 + 5.0 * (centroid[i] - 0.5) * layer_shape
                 + 3.0 * bandwidth[i] * np.sin(v * np.pi * 2.0)
                 + ridge
+                + radius_noise
             )
             x = np.cos(a) * radius
             y = np.sin(a) * radius
@@ -94,6 +104,8 @@ def write_vessel(
     radial_amp_mm: float = 12.0,
     layers: int = 48,
     ridge_amp_mm: float = 3.0,
+    angle_jitter_deg: float = 0.0,
+    radius_noise_mm: float = 0.0,
     close_top: bool = False,
     seed: int | None = None,
 ) -> dict[str, Any]:
@@ -104,7 +116,10 @@ def write_vessel(
         radial_amp_mm=radial_amp_mm,
         layers=layers,
         ridge_amp_mm=ridge_amp_mm,
+        angle_jitter_deg=angle_jitter_deg,
+        radius_noise_mm=radius_noise_mm,
         close_top=close_top,
+        seed=seed,
     )
     obj_path = export_obj(vertices, faces, out_path)
     report = inspect_arrays(vertices, faces)
@@ -118,10 +133,14 @@ def write_vessel(
             "radial_amp_mm": radial_amp_mm,
             "layers": layers,
             "ridge_amp_mm": ridge_amp_mm,
+            "angle_jitter_deg": angle_jitter_deg,
+            "radius_noise_mm": radius_noise_mm,
             "close_top": close_top,
         },
+        "seed_usage": "geometry_rng" if (angle_jitter_deg > 0 or radius_noise_mm > 0) else "metadata_only",
         "audio": features.to_manifest(),
         "mesh": report.to_dict(),
+        "provenance": runtime_provenance(),
         "outputs": {"obj": str(obj_path)},
     }
     manifest_path = Path(out_path).with_suffix(".manifest.json")

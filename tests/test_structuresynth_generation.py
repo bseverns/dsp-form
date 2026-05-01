@@ -57,3 +57,12 @@ def test_generated_eisenscript_rule_calls_have_definitions() -> None:
                 calls.add(target)
 
     assert calls <= defs
+
+
+def test_radial_burst_template_generates_expected_rules() -> None:
+    grammar, metadata = generate_eisenscript(_fake_features(), seed=99, max_events=6, template="radial-burst")
+    assert "rule core" in grammar
+    assert "rule ring" in grammar
+    assert "burstMid" in grammar or "burstLow" in grammar or "burstHigh" in grammar
+    assert metadata["template"] == "radial-burst"
+    assert metadata["event_count_written"] <= 6

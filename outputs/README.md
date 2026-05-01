@@ -7,4 +7,8 @@ Generated files belong here:
 - `previews/` — PNG renders/contact sheets.
 - `manifests/` — JSON manifests.
 
+Typical preview flow:
+
+- `dspform contact-sheet ... --out outputs/previews/<name>.png`
+
 Keep raw exports. Mesh repair is an edit, not an erasure.

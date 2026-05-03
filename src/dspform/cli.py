@@ -9,6 +9,7 @@ import numpy as np
 from scipy.io import wavfile
 
 from .audio_features import load_audio_features, save_feature_csv
+from .generators.helix import write_helix
 from .generators.implicit_field import write_implicit_field
 from .generators.ribbon import write_ribbon
 from .generators.terrain import write_terrain
@@ -40,6 +41,16 @@ PARAM_SWEEP_SPECS: dict[str, dict[str, type[Any]]] = {
         "base_radius": float,
         "radial_amp": float,
         "layers": int,
+        "ridge_amp": float,
+        "angle_jitter_deg": float,
+        "radius_noise_mm": float,
+    },
+    "helix": {
+        "height": float,
+        "base_radius": float,
+        "radial_amp": float,
+        "turns": float,
+        "tube_radius": float,
         "ridge_amp": float,
         "angle_jitter_deg": float,
         "radius_noise_mm": float,
@@ -106,6 +117,11 @@ def _validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) ->
         _require_positive(parser, args.seconds, name="--seconds")
         _require_positive(parser, args.sr, name="--sr")
         return
+    if args.command == "contact-sheet":
+        _require_positive(parser, args.cols, name="--cols")
+        _require_positive(parser, args.tile_width, name="--tile-width")
+        _require_positive(parser, args.tile_height, name="--tile-height")
+        return
 
     _require_positive(parser, args.sr, name="--sr")
     _require_positive(parser, args.hop, name="--hop")
@@ -134,6 +150,16 @@ def _validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) ->
         _require_positive(parser, args.layers, name="--layers")
         if args.layers < 2:
             parser.error("--layers must be >= 2.")
+        _require_non_negative(parser, args.ridge_amp, name="--ridge-amp")
+        _require_non_negative(parser, args.angle_jitter_deg, name="--angle-jitter-deg")
+        _require_non_negative(parser, args.radius_noise_mm, name="--radius-noise-mm")
+    elif args.command == "helix":
+        if args.height is not None:
+            _require_positive(parser, args.height, name="--height")
+        _require_positive(parser, args.base_radius, name="--base-radius")
+        _require_non_negative(parser, args.radial_amp, name="--radial-amp")
+        _require_positive(parser, args.turns, name="--turns")
+        _require_positive(parser, args.tube_radius, name="--tube-radius")
         _require_non_negative(parser, args.ridge_amp, name="--ridge-amp")
         _require_non_negative(parser, args.angle_jitter_deg, name="--angle-jitter-deg")
         _require_non_negative(parser, args.radius_noise_mm, name="--radius-noise-mm")
@@ -180,6 +206,16 @@ def _validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) ->
             _require_non_negative(parser, args.ridge_amp, name="--ridge-amp")
             _require_non_negative(parser, args.angle_jitter_deg, name="--angle-jitter-deg")
             _require_non_negative(parser, args.radius_noise_mm, name="--radius-noise-mm")
+        elif args.generator == "helix":
+            if args.height is not None:
+                _require_positive(parser, args.height, name="--height")
+            _require_positive(parser, args.base_radius, name="--base-radius")
+            _require_non_negative(parser, args.radial_amp, name="--radial-amp")
+            _require_positive(parser, args.turns, name="--turns")
+            _require_positive(parser, args.tube_radius, name="--tube-radius")
+            _require_non_negative(parser, args.ridge_amp, name="--ridge-amp")
+            _require_non_negative(parser, args.angle_jitter_deg, name="--angle-jitter-deg")
+            _require_non_negative(parser, args.radius_noise_mm, name="--radius-noise-mm")
         elif args.generator == "field":
             _require_positive(parser, args.resolution, name="--resolution")
             if args.resolution < 8:
@@ -222,6 +258,16 @@ def _validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) ->
             _require_non_negative(parser, args.ridge_amp, name="--ridge-amp")
             _require_non_negative(parser, args.angle_jitter_deg, name="--angle-jitter-deg")
             _require_non_negative(parser, args.radius_noise_mm, name="--radius-noise-mm")
+        elif args.generator == "helix":
+            if args.height is not None:
+                _require_positive(parser, args.height, name="--height")
+            _require_positive(parser, args.base_radius, name="--base-radius")
+            _require_non_negative(parser, args.radial_amp, name="--radial-amp")
+            _require_positive(parser, args.turns, name="--turns")
+            _require_positive(parser, args.tube_radius, name="--tube-radius")
+            _require_non_negative(parser, args.ridge_amp, name="--ridge-amp")
+            _require_non_negative(parser, args.angle_jitter_deg, name="--angle-jitter-deg")
+            _require_non_negative(parser, args.radius_noise_mm, name="--radius-noise-mm")
         elif args.generator == "field":
             _require_positive(parser, args.resolution, name="--resolution")
             if args.resolution < 8:
@@ -232,10 +278,6 @@ def _validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) ->
             _require_positive(parser, args.max_events, name="--max-events")
             if not 0.0 <= args.onset_threshold <= 1.0:
                 parser.error("--onset-threshold must be in [0, 1].")
-    elif args.command == "contact-sheet":
-        _require_positive(parser, args.cols, name="--cols")
-        _require_positive(parser, args.tile_width, name="--tile-width")
-        _require_positive(parser, args.tile_height, name="--tile-height")
 
 
 def _seed_series(start: int, count: int, step: int) -> list[int]:
@@ -310,6 +352,20 @@ def _run_generator(
             angle_jitter_deg=args.angle_jitter_deg,
             radius_noise_mm=args.radius_noise_mm,
             close_top=args.close_top,
+            seed=seed,
+        )
+    if generator == "helix":
+        return write_helix(
+            features,
+            out_path,
+            height_mm=args.height if args.height is not None else 120.0,
+            base_radius_mm=args.base_radius,
+            radial_amp_mm=args.radial_amp,
+            turns=args.turns,
+            tube_radius_mm=args.tube_radius,
+            ridge_amp_mm=args.ridge_amp,
+            angle_jitter_deg=args.angle_jitter_deg,
+            radius_noise_mm=args.radius_noise_mm,
             seed=seed,
         )
     if generator == "field":
@@ -462,6 +518,17 @@ def main() -> None:
     p_vessel.add_argument("--radius-noise-mm", type=float, default=0.0, help="Seeded radial noise amplitude in millimeters")
     p_vessel.add_argument("--close-top", action="store_true")
 
+    p_helix = sub.add_parser("helix", help="Generate a signal-driven helical tube from audio features")
+    add_audio_common(p_helix)
+    p_helix.add_argument("--height", type=float, default=120.0)
+    p_helix.add_argument("--base-radius", type=float, default=24.0)
+    p_helix.add_argument("--radial-amp", type=float, default=10.0)
+    p_helix.add_argument("--turns", type=float, default=3.5)
+    p_helix.add_argument("--tube-radius", type=float, default=4.0)
+    p_helix.add_argument("--ridge-amp", type=float, default=1.6)
+    p_helix.add_argument("--angle-jitter-deg", type=float, default=0.0, help="Seeded angular jitter amplitude in degrees")
+    p_helix.add_argument("--radius-noise-mm", type=float, default=0.0, help="Seeded radial noise amplitude in millimeters")
+
     p_field = sub.add_parser("field", help="Generate an implicit-field form using marching cubes")
     add_audio_common(p_field)
     p_field.add_argument("--resolution", type=int, default=48)
@@ -491,7 +558,7 @@ def main() -> None:
 
     p_sweep = sub.add_parser("seed-sweep", help="Generate a family of outputs across seeds")
     p_sweep.add_argument("audio", help="Input audio path")
-    p_sweep.add_argument("--generator", required=True, choices=["terrain", "ribbon", "vessel", "field", "ssynth"])
+    p_sweep.add_argument("--generator", required=True, choices=["terrain", "ribbon", "vessel", "helix", "field", "ssynth"])
     p_sweep.add_argument("--out-dir", required=True, help="Output directory for generated family")
     p_sweep.add_argument("--name-prefix", default=None, help="Output filename prefix (default: input audio stem)")
     p_sweep.add_argument("--seed-start", type=int, default=0)
@@ -513,6 +580,8 @@ def main() -> None:
     p_sweep.add_argument("--base-radius", type=float, default=20.0)
     p_sweep.add_argument("--radial-amp", type=float, default=12.0)
     p_sweep.add_argument("--layers", type=int, default=48)
+    p_sweep.add_argument("--turns", type=float, default=3.5)
+    p_sweep.add_argument("--tube-radius", type=float, default=4.0)
     p_sweep.add_argument("--ridge-amp", type=float, default=3.0)
     p_sweep.add_argument("--angle-jitter-deg", type=float, default=0.0)
     p_sweep.add_argument("--radius-noise-mm", type=float, default=0.0)
@@ -526,7 +595,7 @@ def main() -> None:
 
     p_param_sweep = sub.add_parser("param-sweep", help="Generate a family by varying one parameter")
     p_param_sweep.add_argument("audio", help="Input audio path")
-    p_param_sweep.add_argument("--generator", required=True, choices=["terrain", "ribbon", "vessel", "field", "ssynth"])
+    p_param_sweep.add_argument("--generator", required=True, choices=["terrain", "ribbon", "vessel", "helix", "field", "ssynth"])
     p_param_sweep.add_argument("--param", required=True, help="Parameter name to vary")
     p_param_sweep.add_argument("--values", required=True, help="Comma-separated values for the parameter sweep")
     p_param_sweep.add_argument("--out-dir", required=True, help="Output directory for generated family")
@@ -548,6 +617,8 @@ def main() -> None:
     p_param_sweep.add_argument("--base-radius", type=float, default=20.0)
     p_param_sweep.add_argument("--radial-amp", type=float, default=12.0)
     p_param_sweep.add_argument("--layers", type=int, default=48)
+    p_param_sweep.add_argument("--turns", type=float, default=3.5)
+    p_param_sweep.add_argument("--tube-radius", type=float, default=4.0)
     p_param_sweep.add_argument("--ridge-amp", type=float, default=3.0)
     p_param_sweep.add_argument("--angle-jitter-deg", type=float, default=0.0)
     p_param_sweep.add_argument("--radius-noise-mm", type=float, default=0.0)
@@ -738,6 +809,20 @@ def main() -> None:
             angle_jitter_deg=args.angle_jitter_deg,
             radius_noise_mm=args.radius_noise_mm,
             close_top=args.close_top,
+            seed=args.seed,
+        )
+    elif args.command == "helix":
+        manifest = write_helix(
+            features,
+            args.out,
+            height_mm=args.height,
+            base_radius_mm=args.base_radius,
+            radial_amp_mm=args.radial_amp,
+            turns=args.turns,
+            tube_radius_mm=args.tube_radius,
+            ridge_amp_mm=args.ridge_amp,
+            angle_jitter_deg=args.angle_jitter_deg,
+            radius_noise_mm=args.radius_noise_mm,
             seed=args.seed,
         )
     elif args.command == "field":

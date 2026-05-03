@@ -55,6 +55,23 @@ def test_validate_accepts_seeded_vessel_controls() -> None:
     _validate_args(_parser(), args)
 
 
+def test_validate_accepts_helix_controls() -> None:
+    args = argparse.Namespace(
+        command="helix",
+        sr=22050,
+        hop=512,
+        height=120.0,
+        base_radius=24.0,
+        radial_amp=10.0,
+        turns=3.5,
+        tube_radius=4.0,
+        ridge_amp=1.6,
+        angle_jitter_deg=4.0,
+        radius_noise_mm=0.7,
+    )
+    _validate_args(_parser(), args)
+
+
 def test_validate_rejects_non_positive_seed_sweep_count() -> None:
     args = argparse.Namespace(
         command="seed-sweep",
@@ -90,6 +107,11 @@ def test_validate_accepts_seed_sweep_for_ssynth() -> None:
 def test_parse_param_sweep_values_coerces_numeric_values() -> None:
     values = _parse_param_sweep_values("terrain", "texture_noise_mm", "0.0,0.2,0.6")
     assert values == [0.0, 0.2, 0.6]
+
+
+def test_parse_param_sweep_values_accepts_helix_turns() -> None:
+    values = _parse_param_sweep_values("helix", "turns", "2.5,3.5,4.5")
+    assert values == [2.5, 3.5, 4.5]
 
 
 def test_parse_param_sweep_values_rejects_unknown_param() -> None:

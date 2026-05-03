@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import gcd
 from pathlib import Path
 from typing import Any
 
 import numpy as np
+from scipy.io import wavfile
+from scipy.signal import resample_poly, stft
 
 from .utils import normalize
 
@@ -40,7 +43,7 @@ def load_audio_features(
     n_fft: int = 2048,
     max_bins: int = 96,
 ) -> AudioFeatures:
-    """Load a WAV/AIFF/MP3-compatible file and extract starter features.
+    """Load a WAV file and extract starter features.
 
     This intentionally starts with familiar, high-leverage features:
     RMS = loudness/envelope proxy
@@ -49,26 +52,29 @@ def load_audio_features(
     onset strength = event/ridge proxy
     spectrogram_db = terrain source
     """
-    import librosa
-
     path = Path(audio_path)
-    y, sample_rate = librosa.load(path, sr=sr, mono=True)
-    duration = float(librosa.get_duration(y=y, sr=sample_rate))
+    y, sample_rate = _load_wav_mono(path, sr=sr)
+    duration = float(len(y) / sample_rate)
 
-    rms = librosa.feature.rms(y=y, frame_length=n_fft, hop_length=hop_length)[0]
-    centroid = librosa.feature.spectral_centroid(y=y, sr=sample_rate, n_fft=n_fft, hop_length=hop_length)[0]
-    bandwidth = librosa.feature.spectral_bandwidth(y=y, sr=sample_rate, n_fft=n_fft, hop_length=hop_length)[0]
-    onset = librosa.onset.onset_strength(y=y, sr=sample_rate, hop_length=hop_length)
-
-    stft = np.abs(librosa.stft(y, n_fft=n_fft, hop_length=hop_length))
-    spec_db = librosa.amplitude_to_db(stft, ref=np.max)
+    freqs, times, zxx = stft(
+        y,
+        fs=sample_rate,
+        window="hann",
+        nperseg=n_fft,
+        noverlap=n_fft - hop_length,
+        boundary="zeros",
+        padded=True,
+    )
+    magnitude = np.abs(zxx)
+    rms = _frame_rms(y, frame_length=n_fft, hop_length=hop_length, frame_count=magnitude.shape[1])
+    centroid, bandwidth = _spectral_shape(freqs, magnitude)
+    onset = _spectral_flux(magnitude)
+    spec_db = _amplitude_to_db(magnitude)
 
     # Downsample frequency bins to keep first generated meshes small.
     if spec_db.shape[0] > max_bins:
         idx = np.linspace(0, spec_db.shape[0] - 1, max_bins).astype(int)
         spec_db = spec_db[idx, :]
-
-    times = librosa.frames_to_time(np.arange(len(rms)), sr=sample_rate, hop_length=hop_length)
 
     # Ensure same frame count across features.
     frame_count = min(len(times), len(rms), len(centroid), len(bandwidth), len(onset), spec_db.shape[1])
@@ -84,6 +90,67 @@ def load_audio_features(
         onset=onset[:frame_count],
         spectrogram_db=spec_db[:, :frame_count],
     )
+
+
+def _load_wav_mono(path: Path, *, sr: int | None) -> tuple[np.ndarray, int]:
+    sample_rate, data = wavfile.read(path)
+    y = _to_float_mono(data)
+    if sr is not None and sample_rate != sr:
+        factor = gcd(sample_rate, sr)
+        y = resample_poly(y, up=sr // factor, down=sample_rate // factor)
+        sample_rate = sr
+    return y.astype(float, copy=False), int(sample_rate)
+
+
+def _to_float_mono(data: np.ndarray) -> np.ndarray:
+    y = np.asarray(data)
+    if y.ndim > 1:
+        y = y.mean(axis=1)
+
+    if np.issubdtype(y.dtype, np.integer):
+        info = np.iinfo(y.dtype)
+        scale = max(abs(info.min), abs(info.max))
+        return y.astype(float) / scale
+    if np.issubdtype(y.dtype, np.floating):
+        return y.astype(float, copy=False)
+    raise TypeError(f"Unsupported WAV sample dtype: {y.dtype}")
+
+
+def _frame_rms(y: np.ndarray, *, frame_length: int, hop_length: int, frame_count: int) -> np.ndarray:
+    if frame_count <= 0:
+        return np.zeros(0, dtype=float)
+
+    pad = frame_length // 2
+    padded = np.pad(y, (pad, pad), mode="constant")
+    rms = np.zeros(frame_count, dtype=float)
+    for i in range(frame_count):
+        start = i * hop_length
+        frame = padded[start : start + frame_length]
+        if len(frame) < frame_length:
+            frame = np.pad(frame, (0, frame_length - len(frame)), mode="constant")
+        rms[i] = np.sqrt(np.mean(frame * frame))
+    return rms
+
+
+def _spectral_shape(freqs: np.ndarray, magnitude: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    weights = magnitude + 1e-12
+    denom = np.sum(weights, axis=0)
+    centroid = np.sum(freqs[:, None] * weights, axis=0) / denom
+    spread = freqs[:, None] - centroid[None, :]
+    bandwidth = np.sqrt(np.sum((spread * spread) * weights, axis=0) / denom)
+    return centroid, bandwidth
+
+
+def _spectral_flux(magnitude: np.ndarray) -> np.ndarray:
+    if magnitude.shape[1] == 0:
+        return np.zeros(0, dtype=float)
+    diffs = np.diff(magnitude, axis=1, prepend=magnitude[:, :1])
+    return np.sum(np.maximum(diffs, 0.0), axis=0)
+
+
+def _amplitude_to_db(magnitude: np.ndarray, *, amin: float = 1e-10) -> np.ndarray:
+    ref = max(float(np.max(magnitude)), amin)
+    return 20.0 * np.log10(np.maximum(magnitude, amin) / ref)
 
 
 def feature_table(features: AudioFeatures) -> np.ndarray:

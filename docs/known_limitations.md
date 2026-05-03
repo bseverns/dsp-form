@@ -8,6 +8,7 @@ This starter repo is intentionally modest.
 - STL/3MF export is planned but not yet wired into the CLI.
 - Mesh repair is optional and conservative.
 - Blender rendering is provided as a script, not as a fully polished preview system.
+- Contact-sheet rendering depends on Matplotlib and may need a writable `MPLCONFIGDIR` on first run in locked-down environments.
 - Processing sketch is a teaching stub, not a full audio input system.
 - Control trace input is documented but not yet implemented.
 - StructureSynth grammar generation is implemented as a starter score writer, not as an automated StructureSynth renderer/exporter.
@@ -15,6 +16,8 @@ This starter repo is intentionally modest.
 ## Design choice
 
 The repo starts with plain, inspectable code instead of a clever abstraction layer. That is intentional. The first goal is to make the pipeline understandable enough to teach, debug, and extend.
+
+The repo has now proven that several direct-mesh lanes can run locally from a real WAV, but that is not the same as print validation. Physical review, slicer behavior, and repair discipline remain external steps.
 
 
 ## StructureSynth-specific limits

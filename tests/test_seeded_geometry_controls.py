@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 
 from dspform.audio_features import AudioFeatures
+from dspform.generators.helix import helix_mesh
 from dspform.generators.terrain import terrain_mesh
 from dspform.generators.vessel import vessel_mesh
 from dspform.utils import runtime_provenance
@@ -48,6 +49,20 @@ def test_vessel_noise_respects_seed_and_defaults() -> None:
     v2, _ = vessel_mesh(features, angle_jitter_deg=5.0, radius_noise_mm=0.8, seed=11)
     v3, _ = vessel_mesh(features, angle_jitter_deg=5.0, radius_noise_mm=0.8, seed=11)
     v4, _ = vessel_mesh(features, angle_jitter_deg=5.0, radius_noise_mm=0.8, seed=12)
+    assert np.array_equal(v2, v3)
+    assert not np.array_equal(v2, v4)
+
+
+def test_helix_noise_respects_seed_and_defaults() -> None:
+    features = _fake_features()
+    v0, f0 = helix_mesh(features, angle_jitter_deg=0.0, radius_noise_mm=0.0, seed=1)
+    v1, f1 = helix_mesh(features, angle_jitter_deg=0.0, radius_noise_mm=0.0, seed=999)
+    assert np.array_equal(v0, v1)
+    assert np.array_equal(f0, f1)
+
+    v2, _ = helix_mesh(features, angle_jitter_deg=4.0, radius_noise_mm=0.8, seed=11)
+    v3, _ = helix_mesh(features, angle_jitter_deg=4.0, radius_noise_mm=0.8, seed=11)
+    v4, _ = helix_mesh(features, angle_jitter_deg=4.0, radius_noise_mm=0.8, seed=12)
     assert np.array_equal(v2, v3)
     assert not np.array_equal(v2, v4)
 

@@ -1,23 +1,40 @@
 # Roadmap
 
+## Current snapshot
+
+Local proof of pipeline is now real, not theoretical:
+
+- [x] Local `.venv` workflow established.
+- [x] First terrain run from a real WAV.
+- [x] First vessel run from a real WAV.
+- [x] First helix run from a real WAV.
+- [x] Feature CSV + manifest export confirmed.
+- [x] Parameter sweep confirmed on `helix.turns`.
+- [ ] Blender inspection still needs to be done manually.
+- [ ] Slicer inspection still needs to be done manually.
+- [ ] First physical print still needs to be done.
+- [ ] Notes from mesh/print review still need to be captured.
+
 ## Phase 1 — first body
 
-- [ ] Install Python environment.
-- [ ] Generate sample WAV.
-- [ ] Generate first spectrogram terrain OBJ.
+- [x] Install Python environment.
+- [x] Generate sample WAV.
+- [x] Generate first spectrogram terrain OBJ.
 - [ ] Open in Blender.
 - [ ] Open in slicer.
 - [ ] Print a small tile.
 - [ ] Save notes.
 
-## Phase 2 — three grammars
+## Phase 2 — direct grammars
 
-- [ ] Terrain tile.
+- [x] Terrain tile.
 - [ ] Waveform ribbon.
-- [ ] Circular vessel.
-- [ ] Feature CSV export.
-- [ ] Manifest export.
+- [x] Circular vessel.
+- [x] Helical body.
+- [x] Feature CSV export.
+- [x] Manifest export.
 - [ ] Preview render script.
+- [ ] Compare the first four lanes in Blender/MeshLab and record which ones feel least chart-like.
 
 ## Phase 3 — seeded families
 
@@ -26,6 +43,8 @@
 - [x] Seed sweep.
 - [x] Parameter sweep.
 - [x] Comparison CSV.
+- [x] First helix turns sweep from a real WAV.
+- [ ] Stable local preview image generation in this environment.
 
 ## Phase 4 — controller-driven forms
 
@@ -52,6 +71,7 @@
 - [ ] Material log.
 - [ ] Failed print archive.
 - [ ] Student-safe checklist.
+- [ ] Record whether terrain / vessel / helix survive first plastic contact.
 
 ## Phase 6 — installation/live lane
 

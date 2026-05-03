@@ -30,6 +30,42 @@ Then inspect the OBJ in:
 - MeshLab for mesh cleanup and inspection.
 - Cura/PrusaSlicer/Bambu Studio/etc. for print feasibility.
 
+## Current proven pass
+
+The repo has now been exercised locally with a real WAV through multiple bodies:
+
+- terrain
+- vessel
+- helix
+- helix parameter sweep (`turns`)
+
+That means the current practical threshold has shifted from "can this repo make one object?" to "which body best carries the signal, and which ones survive inspection?"
+
+Useful comparison loop:
+
+```bash
+dspform terrain audio/samples/dspFORMtest.wav \
+  --out outputs/obj/dspFORMtest_terrain.obj \
+  --csv data/features/dspFORMtest_features.csv
+
+dspform vessel audio/samples/dspFORMtest.wav \
+  --out outputs/obj/dspFORMtest_vessel.obj
+
+dspform helix audio/samples/dspFORMtest.wav \
+  --out outputs/obj/dspFORMtest_helix.obj
+
+dspform param-sweep audio/samples/dspFORMtest.wav \
+  --generator helix \
+  --param turns \
+  --values 2.5,3.5,4.5 \
+  --out-dir outputs/obj/param_sweeps \
+  --name-prefix dspFORMtest
+```
+
+Next manual step:
+
+- Open those outputs side by side and decide which grammar feels like a body and which still feels like a chart.
+
 ## Small print discipline
 
 Do not begin with heroic prints.
@@ -119,3 +155,5 @@ dspform contact-sheet outputs/obj/seed_sweeps/sine_sweep_ribbon_seed_sweep.json 
 ```
 
 For OBJ-based sweeps this renders quick mesh thumbnails. For grammar-only sweeps it falls back to labeled metadata cards.
+
+In restricted environments, Matplotlib may need a writable config/cache directory for the first render pass. If preview generation stalls, set `MPLCONFIGDIR` to a writable temp folder and retry.

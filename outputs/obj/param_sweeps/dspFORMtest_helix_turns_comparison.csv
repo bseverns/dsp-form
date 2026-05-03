@@ -1,0 +1,4 @@
+generator,param,value,seed,seed_usage,manifest,obj,eisenscript,vertex_count,face_count,extent_x,extent_y,extent_z,warning_count,template,event_count_written,onset_density
+helix,turns,2.5,0,metadata_only,outputs/obj/param_sweeps/dspFORMtest_helix_turns2p5.manifest.json,outputs/obj/param_sweeps/dspFORMtest_helix_turns2p5.obj,,6590,13176,61.397359,58.36895,137.054572,0,,,
+helix,turns,3.5,0,metadata_only,outputs/obj/param_sweeps/dspFORMtest_helix_turns3p5.manifest.json,outputs/obj/param_sweeps/dspFORMtest_helix_turns3p5.obj,,6590,13176,60.459911,60.611311,137.524162,0,,,
+helix,turns,4.5,0,metadata_only,outputs/obj/param_sweeps/dspFORMtest_helix_turns4p5.manifest.json,outputs/obj/param_sweeps/dspFORMtest_helix_turns4p5.obj,,6590,13176,61.281757,59.525509,137.774505,0,,,

@@ -80,7 +80,29 @@ Risk:
 - Meshes can become heavy quickly. Start with low resolutions and strict manifests.
 
 
-## 5. StructureSynth grammar body
+## 5. Helical body
+
+```text
+time → travel along a spiral
+RMS → outward swelling of the coil
+centroid → lift / flare bias
+onset → tube thickening / nodal ribs
+bandwidth → torsion bias
+```
+
+Best for:
+
+- Reliquaries that feel less like charts.
+- Tendon / vine / antenna forms.
+- Suspended forms and hanging studies.
+- Objects that preserve time without flattening it.
+
+Risk:
+
+- Tight turns can self-intersect or create support-heavy prints. Keep tube radius and turn count honest.
+
+
+## 6. StructureSynth grammar body
 
 ```text
 audio features → EisenScript grammar

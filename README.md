@@ -148,6 +148,26 @@ dspform ssynth audio/samples/sine_sweep.wav \
   --max-events 24
 ```
 
+Or generate a chronological hybrid body that references the direct mesh lanes:
+
+```bash
+dspform ssynth audio/samples/sine_sweep.wav \
+  --out pipelines/structuresynth/grammars/generated/sine_sweep_chrono_body.es \
+  --template chrono-body \
+  --seed 42 \
+  --max-events 24
+```
+
+Or generate a denser chronological body:
+
+```bash
+dspform ssynth audio/samples/sine_sweep.wav \
+  --out pipelines/structuresynth/grammars/generated/sine_sweep_chrono_body_dense.es \
+  --template chrono-body-dense \
+  --seed 42 \
+  --max-events 24
+```
+
 The mesh commands write:
 
 - `.obj` mesh file

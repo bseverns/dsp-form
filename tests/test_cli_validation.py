@@ -142,7 +142,7 @@ def test_validate_accepts_param_sweep_for_ssynth_template() -> None:
         command="param-sweep",
         generator="ssynth",
         param="template",
-        values="onset-lattice,radial-burst,helix-coil,helix-thread,helix-vine",
+        values="onset-lattice,radial-burst,helix-coil,helix-thread,helix-vine,chrono-body,chrono-body-dense",
         sr=22050,
         hop=512,
         max_events=24,

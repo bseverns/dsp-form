@@ -1,0 +1,70 @@
+{
+  "audio": {
+    "duration_seconds": 8.472018140589569,
+    "feature_names": [
+      "rms",
+      "centroid",
+      "bandwidth",
+      "onset",
+      "spectrogram_db"
+    ],
+    "frames": 366,
+    "frequency_bins": 96,
+    "sample_rate": 22050,
+    "source_path": "audio/samples/dspFORMtest.wav"
+  },
+  "created_utc": "2026-05-03T04:20:46+00:00",
+  "generator": "structuresynth/chrono-body",
+  "outputs": {
+    "eisenscript": "pipelines/structuresynth/grammars/generated/dspFORMtest_chrono_body.es",
+    "expected_next_step": "Open the .es file in StructureSynth or BrowserSynth, export OBJ, then inspect/repair like any other generated mesh.",
+    "manifest": "pipelines/structuresynth/grammars/generated/dspFORMtest_chrono_body.json"
+  },
+  "parameters": {
+    "max_events": 24,
+    "onset_threshold": 0.62,
+    "template": "chrono-body"
+  },
+  "provenance": {
+    "git_commit": "6be6516",
+    "package_versions": {
+      "dsp-form-lab": "0.1.0",
+      "matplotlib": "3.10.9",
+      "numpy": "2.4.4",
+      "scikit-image": "0.26.0",
+      "scipy": "1.17.1",
+      "trimesh": "4.12.2"
+    },
+    "python_version": "3.11.14"
+  },
+  "seed": 42,
+  "seed_usage": "grammar_rng",
+  "structuresynth": {
+    "event_count_written": 5,
+    "grammar_parameters": {
+      "body_decay": 0.8986098224769664,
+      "body_scale": 1.065229809507034,
+      "control_point_count": 20,
+      "maxdepth": 26,
+      "maxobjects": 2882,
+      "pitch_base": 13.775562536640386,
+      "spine_step": 0.4013074523767585,
+      "turn_base": 30.181650894578556
+    },
+    "max_events": 24,
+    "seed": 42,
+    "summary": {
+      "bandwidth_mean": 0.5347544380758399,
+      "centroid_mean": 0.4319756964800215,
+      "frame_count": 366,
+      "onset_count": 5,
+      "onset_density": 0.1092896174863388,
+      "onset_max": 1.0,
+      "onset_mean": 0.18726802861041256,
+      "onset_threshold": 0.62,
+      "rms_max": 1.0,
+      "rms_mean": 0.5065372618837926
+    },
+    "template": "chrono-body"
+  }
+}

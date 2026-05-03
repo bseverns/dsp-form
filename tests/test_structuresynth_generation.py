@@ -93,3 +93,25 @@ def test_helix_vine_template_generates_expected_rules() -> None:
     assert "vineBudMid" in grammar or "vineBudLow" in grammar or "vineBudHigh" in grammar
     assert metadata["template"] == "helix-vine"
     assert metadata["event_count_written"] <= 6
+
+
+def test_chrono_body_template_generates_expected_rules() -> None:
+    grammar, metadata = generate_eisenscript(_fake_features(), seed=8, max_events=6, template="chrono-body")
+    assert "rule chrono0" in grammar
+    assert "rule chronoTail" in grammar
+    assert "ribbonFin" in grammar
+    assert "vesselBud" in grammar
+    assert "helixHook" in grammar
+    assert "terrainRidge" in grammar
+    assert metadata["template"] == "chrono-body"
+    assert metadata["event_count_written"] <= 6
+
+
+def test_chrono_body_dense_template_generates_expected_rules() -> None:
+    grammar, metadata = generate_eisenscript(_fake_features(), seed=9, max_events=6, template="chrono-body-dense")
+    assert "rule chronod0" in grammar
+    assert "rule chronodTail" in grammar
+    assert "ribbonFin" in grammar
+    assert "chronoPulse" in grammar
+    assert metadata["template"] == "chrono-body-dense"
+    assert metadata["event_count_written"] <= 6

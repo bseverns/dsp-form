@@ -50,6 +50,8 @@ The starter templates are:
 - `helix-coil`
 - `helix-thread`
 - `helix-vine`
+- `chrono-body`
+- `chrono-body-dense`
 
 It maps sound into StructureSynth like this:
 
@@ -67,6 +69,17 @@ The spiral templates now split in two useful directions:
 - `helix-coil`: more open, event-clustered spiral growth
 - `helix-thread`: a tighter sequential path where events are threaded along one recursive body
 - `helix-vine`: a more continuous spiral spine with smaller ribs, pulses, and side growths attached along it
+
+The `chrono-body` template is the first explicit cross-reference back to the direct mesh lanes:
+
+- ribbon-like fins
+- vessel-like buds
+- helix-like hooks
+- terrain-like ridges
+
+All of those motifs are attached along one chronological body instead of being treated as separate top-level objects.
+
+If `chrono-body` feels too sparse in StructureSynth, `chrono-body-dense` uses more control points, shorter step lengths, and closer side attachments so the body reads as a tighter mass.
 
 ## Recommended manual workflow
 

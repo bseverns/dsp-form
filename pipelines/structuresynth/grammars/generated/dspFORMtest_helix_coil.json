@@ -1,0 +1,71 @@
+{
+  "audio": {
+    "duration_seconds": 8.472018140589569,
+    "feature_names": [
+      "rms",
+      "centroid",
+      "bandwidth",
+      "onset",
+      "spectrogram_db"
+    ],
+    "frames": 366,
+    "frequency_bins": 96,
+    "sample_rate": 22050,
+    "source_path": "audio/samples/dspFORMtest.wav"
+  },
+  "created_utc": "2026-05-03T03:34:13+00:00",
+  "generator": "structuresynth/helix-coil",
+  "outputs": {
+    "eisenscript": "pipelines/structuresynth/grammars/generated/dspFORMtest_helix_coil.es",
+    "expected_next_step": "Open the .es file in StructureSynth or BrowserSynth, export OBJ, then inspect/repair like any other generated mesh.",
+    "manifest": "pipelines/structuresynth/grammars/generated/dspFORMtest_helix_coil.json"
+  },
+  "parameters": {
+    "max_events": 24,
+    "onset_threshold": 0.62,
+    "template": "helix-coil"
+  },
+  "provenance": {
+    "git_commit": "c4b044d",
+    "package_versions": {
+      "dsp-form-lab": "0.1.0",
+      "matplotlib": "3.10.9",
+      "numpy": "2.4.4",
+      "scikit-image": "0.26.0",
+      "scipy": "1.17.1",
+      "trimesh": "4.12.2"
+    },
+    "python_version": "3.11.14"
+  },
+  "seed": 42,
+  "seed_usage": "grammar_rng",
+  "structuresynth": {
+    "event_count_written": 5,
+    "grammar_parameters": {
+      "coil_decay": 0.9032622780962081,
+      "coil_pitch": 23.823222287360686,
+      "coil_scale": 0.9758835356954133,
+      "coil_step": 0.6524841595158412,
+      "coil_turn": 63.98888167452223,
+      "maxdepth": 23,
+      "maxobjects": 2326,
+      "node_scale": 0.4127456499911929,
+      "orbit_radius": 5.683015293248163
+    },
+    "max_events": 24,
+    "seed": 42,
+    "summary": {
+      "bandwidth_mean": 0.5347544380758399,
+      "centroid_mean": 0.4319756964800215,
+      "frame_count": 366,
+      "onset_count": 5,
+      "onset_density": 0.1092896174863388,
+      "onset_max": 1.0,
+      "onset_mean": 0.18726802861041256,
+      "onset_threshold": 0.62,
+      "rms_max": 1.0,
+      "rms_mean": 0.5065372618837926
+    },
+    "template": "helix-coil"
+  }
+}

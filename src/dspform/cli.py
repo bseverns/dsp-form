@@ -107,9 +107,9 @@ def _validate_param_sweep_spec(parser: argparse.ArgumentParser, args: argparse.N
     if len(parsed) < 2:
         parser.error("--values must contain at least two entries for a sweep.")
     if args.generator == "ssynth" and args.param == "template":
-        allowed = {"onset-lattice", "radial-burst"}
+        allowed = {"onset-lattice", "radial-burst", "helix-coil", "helix-thread", "helix-vine"}
         if any(value not in allowed for value in parsed):
-            parser.error("--values for ssynth template must be onset-lattice and/or radial-burst.")
+            parser.error("--values for ssynth template must be onset-lattice, radial-burst, helix-coil, helix-thread, and/or helix-vine.")
 
 
 def _validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) -> None:
@@ -550,7 +550,7 @@ def main() -> None:
     p_ssynth.add_argument(
         "--template",
         default="onset-lattice",
-        choices=["onset-lattice", "radial-burst"],
+        choices=["onset-lattice", "radial-burst", "helix-coil", "helix-thread", "helix-vine"],
         help="Grammar template",
     )
     p_ssynth.add_argument("--max-events", type=int, default=24, help="Maximum onset/event calls written into the grammar")
@@ -589,7 +589,7 @@ def main() -> None:
     p_sweep.add_argument("--resolution", type=int, default=48)
     p_sweep.add_argument("--level", type=float, default=0.35)
     p_sweep.add_argument("--scale", type=float, default=80.0)
-    p_sweep.add_argument("--template", default="onset-lattice", choices=["onset-lattice", "radial-burst"])
+    p_sweep.add_argument("--template", default="onset-lattice", choices=["onset-lattice", "radial-burst", "helix-coil", "helix-thread", "helix-vine"])
     p_sweep.add_argument("--max-events", type=int, default=24)
     p_sweep.add_argument("--onset-threshold", type=float, default=0.62)
 
@@ -626,7 +626,7 @@ def main() -> None:
     p_param_sweep.add_argument("--resolution", type=int, default=48)
     p_param_sweep.add_argument("--level", type=float, default=0.35)
     p_param_sweep.add_argument("--scale", type=float, default=80.0)
-    p_param_sweep.add_argument("--template", default="onset-lattice", choices=["onset-lattice", "radial-burst"])
+    p_param_sweep.add_argument("--template", default="onset-lattice", choices=["onset-lattice", "radial-burst", "helix-coil", "helix-thread", "helix-vine"])
     p_param_sweep.add_argument("--max-events", type=int, default=24)
     p_param_sweep.add_argument("--onset-threshold", type=float, default=0.62)
 

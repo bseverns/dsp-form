@@ -1,0 +1,71 @@
+{
+  "audio": {
+    "duration_seconds": 8.472018140589569,
+    "feature_names": [
+      "rms",
+      "centroid",
+      "bandwidth",
+      "onset",
+      "spectrogram_db"
+    ],
+    "frames": 366,
+    "frequency_bins": 96,
+    "sample_rate": 22050,
+    "source_path": "audio/samples/dspFORMtest.wav"
+  },
+  "created_utc": "2026-05-03T03:40:12+00:00",
+  "generator": "structuresynth/helix-thread",
+  "outputs": {
+    "eisenscript": "pipelines/structuresynth/grammars/generated/dspFORMtest_helix_thread.es",
+    "expected_next_step": "Open the .es file in StructureSynth or BrowserSynth, export OBJ, then inspect/repair like any other generated mesh.",
+    "manifest": "pipelines/structuresynth/grammars/generated/dspFORMtest_helix_thread.json"
+  },
+  "parameters": {
+    "max_events": 24,
+    "onset_threshold": 0.62,
+    "template": "helix-thread"
+  },
+  "provenance": {
+    "git_commit": "c4b044d",
+    "package_versions": {
+      "dsp-form-lab": "0.1.0",
+      "matplotlib": "3.10.9",
+      "numpy": "2.4.4",
+      "scikit-image": "0.26.0",
+      "scipy": "1.17.1",
+      "trimesh": "4.12.2"
+    },
+    "python_version": "3.11.14"
+  },
+  "seed": 42,
+  "seed_usage": "grammar_rng",
+  "structuresynth": {
+    "event_count_written": 5,
+    "grammar_parameters": {
+      "maxdepth": 20,
+      "maxobjects": 1902,
+      "node_orbit": 0.43918541788801285,
+      "pitch_base": 20.367416715520516,
+      "step_base": 0.5015689428521102,
+      "tail_scale": 0.22078447142605512,
+      "thread_decay": 0.8686098224769664,
+      "thread_scale": 0.9599029464128443,
+      "turn_base": 43.94624853224703
+    },
+    "max_events": 24,
+    "seed": 42,
+    "summary": {
+      "bandwidth_mean": 0.5347544380758399,
+      "centroid_mean": 0.4319756964800215,
+      "frame_count": 366,
+      "onset_count": 5,
+      "onset_density": 0.1092896174863388,
+      "onset_max": 1.0,
+      "onset_mean": 0.18726802861041256,
+      "onset_threshold": 0.62,
+      "rms_max": 1.0,
+      "rms_mean": 0.5065372618837926
+    },
+    "template": "helix-thread"
+  }
+}

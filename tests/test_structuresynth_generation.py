@@ -66,3 +66,30 @@ def test_radial_burst_template_generates_expected_rules() -> None:
     assert "burstMid" in grammar or "burstLow" in grammar or "burstHigh" in grammar
     assert metadata["template"] == "radial-burst"
     assert metadata["event_count_written"] <= 6
+
+
+def test_helix_coil_template_generates_expected_rules() -> None:
+    grammar, metadata = generate_eisenscript(_fake_features(), seed=5, max_events=6, template="helix-coil")
+    assert "rule coil" in grammar
+    assert "rule turn" in grammar
+    assert "nodeMid" in grammar or "nodeLow" in grammar or "nodeHigh" in grammar
+    assert metadata["template"] == "helix-coil"
+    assert metadata["event_count_written"] <= 6
+
+
+def test_helix_thread_template_generates_expected_rules() -> None:
+    grammar, metadata = generate_eisenscript(_fake_features(), seed=6, max_events=6, template="helix-thread")
+    assert "rule thread0" in grammar
+    assert "rule tail" in grammar
+    assert "threadMid" in grammar or "threadLow" in grammar or "threadHigh" in grammar
+    assert metadata["template"] == "helix-thread"
+    assert metadata["event_count_written"] <= 6
+
+
+def test_helix_vine_template_generates_expected_rules() -> None:
+    grammar, metadata = generate_eisenscript(_fake_features(), seed=7, max_events=6, template="helix-vine")
+    assert "rule vine0" in grammar
+    assert "rule vineTail" in grammar
+    assert "vineBudMid" in grammar or "vineBudLow" in grammar or "vineBudHigh" in grammar
+    assert metadata["template"] == "helix-vine"
+    assert metadata["event_count_written"] <= 6

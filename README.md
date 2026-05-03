@@ -118,6 +118,36 @@ dspform ssynth audio/samples/sine_sweep.wav \
   --max-events 24
 ```
 
+Or generate the spiral-growth variant:
+
+```bash
+dspform ssynth audio/samples/sine_sweep.wav \
+  --out pipelines/structuresynth/grammars/generated/sine_sweep_helix_coil.es \
+  --template helix-coil \
+  --seed 42 \
+  --max-events 24
+```
+
+Or generate a tighter threaded spiral variant:
+
+```bash
+dspform ssynth audio/samples/sine_sweep.wav \
+  --out pipelines/structuresynth/grammars/generated/sine_sweep_helix_thread.es \
+  --template helix-thread \
+  --seed 42 \
+  --max-events 24
+```
+
+Or generate a more continuous vine-like spiral variant:
+
+```bash
+dspform ssynth audio/samples/sine_sweep.wav \
+  --out pipelines/structuresynth/grammars/generated/sine_sweep_helix_vine.es \
+  --template helix-vine \
+  --seed 42 \
+  --max-events 24
+```
+
 The mesh commands write:
 
 - `.obj` mesh file

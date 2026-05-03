@@ -47,6 +47,9 @@ The starter templates are:
 
 - `onset-lattice`
 - `radial-burst`
+- `helix-coil`
+- `helix-thread`
+- `helix-vine`
 
 It maps sound into StructureSynth like this:
 
@@ -58,6 +61,12 @@ It maps sound into StructureSynth like this:
 | spectral bandwidth | twist, roughness, branching spread |
 | seed | StructureSynth `set seed` value |
 | max events | number of event calls written into `rule start` |
+
+The spiral templates now split in two useful directions:
+
+- `helix-coil`: more open, event-clustered spiral growth
+- `helix-thread`: a tighter sequential path where events are threaded along one recursive body
+- `helix-vine`: a more continuous spiral spine with smaller ribs, pulses, and side growths attached along it
 
 ## Recommended manual workflow
 

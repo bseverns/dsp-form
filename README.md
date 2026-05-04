@@ -16,15 +16,16 @@ mesh export + repair
 OBJ / STL / preview / manifest
 ```
 
-The repo starts with four practical direct-mesh grammars and one grammar-score lane:
+The repo starts with several practical direct-mesh grammars, one experimental dynamic-form lane, and one grammar-score lane:
 
 1. **Spectrogram terrain** — time × frequency becomes a printable relief tile.
 2. **Waveform ribbon** — amplitude/envelope becomes a swept 3D ribbon.
 3. **Circular vessel** — time wraps around a circle; features become radius, height, ridges, or texture.
 4. **Helical body** — time climbs a spiral; features become coil radius, tube thickness, and torsion.
-5. **StructureSynth grammar body** — a captured WAV becomes an EisenScript grammar score for recursive growth.
+5. **Growth body** — an experimental dynamic-form lane where loudness pushes, brightness pulls, onsets scar, silence heals, and the mesh records the behavior.
+6. **StructureSynth grammar body** — a captured WAV becomes an EisenScript grammar score for recursive growth.
 
-A sixth path, **implicit field**, is included as a future direction for marching-cubes / scalar-field forms.
+An additional path, **implicit field**, is included as a future direction for marching-cubes / scalar-field forms.
 
 ## Why this repo exists
 
@@ -106,6 +107,23 @@ dspform helix audio/samples/sine_sweep.wav --out outputs/obj/sine_sweep_helix.ob
 # optional seeded variation:
 #   --turns 4.5 --tube-radius 4.8 --angle-jitter-deg 4 --radius-noise-mm 0.8 --seed 42
 ```
+
+Generate an experimental growth body:
+
+```bash
+dspform growth audio/samples/sine_sweep.wav \
+  --profile scar \
+  --memory 0.92 \
+  --event-threshold 0.64 \
+  --branchiness 0.35 \
+  --scar-depth 2.0 \
+  --seed 42 \
+  --out outputs/obj/sine_sweep_growth_scar.obj
+```
+
+This lane treats sound as behavior, not only surface mapping: loudness builds
+pressure, brightness pulls the body, roughness twists it, onsets leave wounds,
+and silence can heal. See `docs/DYNAMIC_FORMS.md` for the design direction.
 
 Generate a StructureSynth / EisenScript grammar score:
 

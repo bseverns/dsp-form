@@ -72,6 +72,39 @@ def test_validate_accepts_helix_controls() -> None:
     _validate_args(_parser(), args)
 
 
+def test_validate_accepts_growth_controls() -> None:
+    args = argparse.Namespace(
+        command="growth",
+        sr=22050,
+        hop=512,
+        length=130.0,
+        tube_radius=4.2,
+        sides=18,
+        memory=0.92,
+        event_threshold=0.64,
+        branchiness=0.35,
+        scar_depth=2.0,
+    )
+    _validate_args(_parser(), args)
+
+
+def test_validate_rejects_out_of_range_growth_memory() -> None:
+    args = argparse.Namespace(
+        command="growth",
+        sr=22050,
+        hop=512,
+        length=130.0,
+        tube_radius=4.2,
+        sides=18,
+        memory=1.2,
+        event_threshold=0.64,
+        branchiness=0.35,
+        scar_depth=2.0,
+    )
+    with pytest.raises(SystemExit):
+        _validate_args(_parser(), args)
+
+
 def test_validate_rejects_non_positive_seed_sweep_count() -> None:
     args = argparse.Namespace(
         command="seed-sweep",

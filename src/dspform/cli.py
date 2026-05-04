@@ -9,6 +9,7 @@ import numpy as np
 from scipy.io import wavfile
 
 from .audio_features import load_audio_features, save_feature_csv
+from .generators.growth_body import write_growth_body
 from .generators.helix import write_helix
 from .generators.implicit_field import write_implicit_field
 from .generators.ribbon import write_ribbon
@@ -163,6 +164,18 @@ def _validate_args(parser: argparse.ArgumentParser, args: argparse.Namespace) ->
         _require_non_negative(parser, args.ridge_amp, name="--ridge-amp")
         _require_non_negative(parser, args.angle_jitter_deg, name="--angle-jitter-deg")
         _require_non_negative(parser, args.radius_noise_mm, name="--radius-noise-mm")
+    elif args.command == "growth":
+        _require_positive(parser, args.length, name="--length")
+        _require_positive(parser, args.tube_radius, name="--tube-radius")
+        _require_positive(parser, args.sides, name="--sides")
+        if args.sides < 6:
+            parser.error("--sides must be >= 6.")
+        if not 0.0 <= args.memory <= 1.0:
+            parser.error("--memory must be in [0, 1].")
+        if not 0.0 <= args.event_threshold <= 1.0:
+            parser.error("--event-threshold must be in [0, 1].")
+        _require_non_negative(parser, args.branchiness, name="--branchiness")
+        _require_non_negative(parser, args.scar_depth, name="--scar-depth")
     elif args.command == "field":
         _require_positive(parser, args.resolution, name="--resolution")
         if args.resolution < 8:
@@ -529,6 +542,17 @@ def main() -> None:
     p_helix.add_argument("--angle-jitter-deg", type=float, default=0.0, help="Seeded angular jitter amplitude in degrees")
     p_helix.add_argument("--radius-noise-mm", type=float, default=0.0, help="Seeded radial noise amplitude in millimeters")
 
+    p_growth = sub.add_parser("growth", help="Generate an experimental behavior-memory growth body")
+    add_audio_common(p_growth)
+    p_growth.add_argument("--profile", choices=["scar", "bloom", "braid", "faultline", "organ", "relic"], default="scar")
+    p_growth.add_argument("--memory", type=float, default=0.92, help="State retention for energy, damage, and growth pressure")
+    p_growth.add_argument("--event-threshold", type=float, default=0.62, help="Normalized onset threshold for gesture extraction")
+    p_growth.add_argument("--branchiness", type=float, default=0.25, help="Probability/scale of event-grown branch scars")
+    p_growth.add_argument("--scar-depth", type=float, default=1.5, help="Depth of event wounds and surface memory in millimeters")
+    p_growth.add_argument("--length", type=float, default=130.0, help="Approximate centerline length in millimeters")
+    p_growth.add_argument("--tube-radius", type=float, default=4.2, help="Base tube radius in millimeters")
+    p_growth.add_argument("--sides", type=int, default=18, help="Tube ring sides")
+
     p_field = sub.add_parser("field", help="Generate an implicit-field form using marching cubes")
     add_audio_common(p_field)
     p_field.add_argument("--resolution", type=int, default=48)
@@ -823,6 +847,20 @@ def main() -> None:
             ridge_amp_mm=args.ridge_amp,
             angle_jitter_deg=args.angle_jitter_deg,
             radius_noise_mm=args.radius_noise_mm,
+            seed=args.seed,
+        )
+    elif args.command == "growth":
+        manifest = write_growth_body(
+            features,
+            args.out,
+            profile=args.profile,
+            memory=args.memory,
+            event_threshold=args.event_threshold,
+            branchiness=args.branchiness,
+            scar_depth=args.scar_depth,
+            length_mm=args.length,
+            tube_radius_mm=args.tube_radius,
+            sides=args.sides,
             seed=args.seed,
         )
     elif args.command == "field":

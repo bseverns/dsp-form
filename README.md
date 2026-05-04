@@ -272,15 +272,6 @@ audio/                   local samples and generated audio
 data/                    features, fields, manifests
 outputs/                 generated meshes and previews
 ```
-
-## Suggested next links to your existing practice
-
-- Use **SeedBox** or other seeded DSP instruments to render repeatable WAVs.
-- Use **MOARkNOBS-42** as a controller for parameters such as height, smoothing, twist, decimation, ridge depth, and seed selection.
-- Use frZone-style band triggers to place mesh events such as ribs, spikes, cuts, openings, or root structures.
-- Use StructureSynth when the sound should become a recursive grammar/body rather than a direct waveform surface.
-- Use Blender and MeshLab for visual inspection before sending anything to a printer.
-
 ## License
 
 MIT. See `LICENSE`.

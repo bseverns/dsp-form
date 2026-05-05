@@ -1,0 +1,42 @@
+{
+  "generator": "growth_body",
+  "param": "profile",
+  "records": [
+    {
+      "value": "scar",
+      "seed": 42,
+      "obj": "outputs/obj/growth_profiles/dspFORMtest_growth_scar.obj",
+      "manifest": "outputs/obj/growth_profiles/dspFORMtest_growth_scar.manifest.json"
+    },
+    {
+      "value": "bloom",
+      "seed": 42,
+      "obj": "outputs/obj/growth_profiles/dspFORMtest_growth_bloom.obj",
+      "manifest": "outputs/obj/growth_profiles/dspFORMtest_growth_bloom.manifest.json"
+    },
+    {
+      "value": "braid",
+      "seed": 42,
+      "obj": "outputs/obj/growth_profiles/dspFORMtest_growth_braid.obj",
+      "manifest": "outputs/obj/growth_profiles/dspFORMtest_growth_braid.manifest.json"
+    },
+    {
+      "value": "faultline",
+      "seed": 42,
+      "obj": "outputs/obj/growth_profiles/dspFORMtest_growth_faultline.obj",
+      "manifest": "outputs/obj/growth_profiles/dspFORMtest_growth_faultline.manifest.json"
+    },
+    {
+      "value": "organ",
+      "seed": 42,
+      "obj": "outputs/obj/growth_profiles/dspFORMtest_growth_organ.obj",
+      "manifest": "outputs/obj/growth_profiles/dspFORMtest_growth_organ.manifest.json"
+    },
+    {
+      "value": "relic",
+      "seed": 42,
+      "obj": "outputs/obj/growth_profiles/dspFORMtest_growth_relic.obj",
+      "manifest": "outputs/obj/growth_profiles/dspFORMtest_growth_relic.manifest.json"
+    }
+  ]
+}
